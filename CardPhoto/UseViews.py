@@ -341,8 +341,6 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
     @return: void
     '''
     def savePhoto(self):
-        if self.output_im is None:
-            return
         if self.size_select == -1 or self.color_select == -1:
             QMessageBox.warning(self, "警告", "请选择尺寸和颜色！", QMessageBox.Close)
             return
