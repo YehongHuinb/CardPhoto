@@ -1,6 +1,8 @@
 # -*- coding: gbk -*-
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtGui import QPixmap
+from MyButton import MyButton
 
 
 class Ui_startView(object):
@@ -11,12 +13,19 @@ class Ui_startView(object):
         startView.setMaximumSize(QtCore.QSize(939, 571))
         self.centralwidget = QtWidgets.QWidget(startView)
         self.centralwidget.setObjectName("centralwidget")
-        self.btn_exit = QtWidgets.QPushButton(self.centralwidget)
+
+        normalImg = QPixmap('./src/icon/exit.ico')
+        pressImg = normalImg.scaled(normalImg.width()*0.95, normalImg.height()*0.95)
+        self.btn_exit = MyButton(self.centralwidget, normalImg, pressImg)
         self.btn_exit.setGeometry(QtCore.QRect(520, 180, 131, 131))
         self.btn_exit.setObjectName("btn_exit")
-        self.btn_open = QtWidgets.QPushButton(self.centralwidget)
+
+        normalImg = QPixmap('./src/icon/open.ico')
+        pressImg = normalImg.scaled(normalImg.width()*0.95, normalImg.height()*0.95)
+        self.btn_open = MyButton(self.centralwidget, normalImg, pressImg)
         self.btn_open.setGeometry(QtCore.QRect(270, 180, 131, 131))
         self.btn_open.setObjectName("btn_open")
+
         startView.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(startView)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 939, 30))
@@ -35,7 +44,5 @@ class Ui_startView(object):
     def retranslateUi(self, startView):
         _translate = QtCore.QCoreApplication.translate
         startView.setWindowTitle(_translate("startView", "快证件照"))
-        self.btn_exit.setText(_translate("startView", "退出"))
-        self.btn_open.setText(_translate("startView", "打开照片"))
         self.menuhelp.setTitle(_translate("startView", "帮助"))
         self.actionabout.setText(_translate("startView", "关于"))

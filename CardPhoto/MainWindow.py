@@ -1,6 +1,9 @@
 # -*- coding: gbk -*-
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QRect
+from PyQt5.QtGui import QPixmap
+from MyButton import MyButton
 
 
 class Ui_mainView(object):
@@ -61,14 +64,25 @@ class Ui_mainView(object):
         self.widget_2.setObjectName("widget_2")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.widget_2)
         self.gridLayout_3.setObjectName("gridLayout_3")
-        self.btn_exit = QtWidgets.QPushButton(self.widget_2)
+
+        normalImg = QPixmap('./src/icon/exit2.png')
+        pressImg = normalImg.scaled(normalImg.width()*0.95, normalImg.height()*0.95)
+        self.btn_exit = MyButton(self.widget_2, normalImg, pressImg)
         self.btn_exit.setObjectName("btn_exit")
+
         self.gridLayout_3.addWidget(self.btn_exit, 0, 3, 1, 1)
-        self.btn_save = QtWidgets.QPushButton(self.widget_2)
+
+        normalImg = QPixmap('./src/icon/save.png')
+        pressImg = normalImg.scaled(normalImg.width()*0.95, normalImg.height()*0.95)
+        self.btn_save = MyButton(self.widget_2, normalImg, pressImg)
         self.btn_save.setObjectName("btn_save")
-        self.btn_reload = QtWidgets.QPushButton(mainView)
+
+        normalImg = QPixmap('./src/icon/reload.png')
+        pressImg = normalImg.scaled(normalImg.width()*0.95, normalImg.height()*0.95)
+        self.btn_reload = MyButton(mainView, normalImg, pressImg)
         self.btn_reload.setObjectName("btn_reload")
         self.btn_reload.move(670, 500)
+
         self.gridLayout_3.addWidget(self.btn_save, 0, 1, 1, 1)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout_3.addItem(spacerItem, 0, 4, 1, 1)
@@ -77,7 +91,7 @@ class Ui_mainView(object):
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout_3.addItem(spacerItem2, 0, 2, 1, 1)
         self.gridLayout_2.addWidget(self.widget_2, 3, 0, 1, 1)
-        self.wid_hole = QtWidgets.QWidget(self.centralwidget)
+        self.wid_hole = QtWidgets.QFrame(self.centralwidget)
         self.wid_hole.setGeometry(QtCore.QRect(540, 50, 361, 381))
         self.wid_hole.setObjectName("wid_hole")
         self.lab_preview = QtWidgets.QLabel(self.wid_hole)
@@ -125,8 +139,5 @@ class Ui_mainView(object):
         self.btn_SoneInch.setText(_translate("mainView", "小1寸"))
         self.btn_LtwoInch.setText(_translate("mainView", "大2寸"))
         self.btn_beauty.setText(_translate("mainView", "美化"))
-        self.btn_exit.setText(_translate("mainView", "退出"))
-        self.btn_save.setText(_translate("mainView", "保存"))
-        self.btn_reload.setText(_translate("mainView", "重新上传"))
         self.menuhelp.setTitle(_translate("mainView", "帮助"))
         self.actionabout.setText(_translate("mainView", "关于"))

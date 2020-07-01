@@ -4,6 +4,7 @@ import cv2
 import dlib
 import numpy as np
 from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5.QtGui import QColor, QIcon
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QAction, QProgressBar
 from StartWindow import Ui_startView
 from MainWindow import Ui_mainView
@@ -15,6 +16,10 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
     def __init__(self):
         super(MainView, self).__init__()
         self.setupUi(self)
+        self.setWindowIcon(QIcon('./src/icon/picture.ico'))
+        palette = QtGui.QPalette()
+        palette.setColor(self.backgroundRole(), QColor(0, 167, 241))
+        self.setPalette(palette)
         self.menuhelp.triggered[QAction].connect(self.info)
         self.btn_exit.clicked.connect(self.close)
         self.btn_save.clicked.connect(self.savePhoto)
@@ -46,7 +51,7 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
         self.dilate = None
 
     def info(self):
-        info = '作者：YHH\n完成时间：2020.6.17'
+        info = '作者：YHH\n完成时间：2020.7.1'
         QMessageBox.information(self, '关于', info, QMessageBox.Close)
 
     '''
@@ -106,7 +111,7 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
                     x = int((right - bottom / 1.06) / 2)
                     left = left + x
                     right = right - x
-                elif bottom / right >= 1.2:
+                elif bottom / right >= 1.1:
                     y = int((bottom - right / 0.98) / 2)
                     top = top + y
                     bottom = bottom - y
@@ -409,22 +414,33 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
                     QtGui.QPixmap('./temp/toShow.jpg').scaled(
                         self.lab_preview.width(), self.lab_preview.height()))
         else:
+            self.lab_sizeShow.hide()
+            self.wid_hole.setGeometry(QtCore.QRect(540, 50, 361, 381))
+            self.lab_preview.move(0, 0)
             self.lab_preview.setPixmap(
                 QtGui.QPixmap('./src/noShow.jpg').scaled(
                     self.lab_preview.width(), self.lab_preview.height()))
+
+
+class QtColor(object):
+    pass
 
 
 class StartView(QtWidgets.QMainWindow, Ui_startView):
     def __init__(self):
         super(StartView, self).__init__()
         self.setupUi(self)
+        self.setWindowIcon(QIcon('./src/icon/picture.ico'))
+        palette = QtGui.QPalette()
+        palette.setColor(self.backgroundRole(), QColor(0, 167, 241))
+        self.setPalette(palette)
         self.m_view = MainView()
         self.menuhelp.triggered[QAction].connect(self.info)
         self.btn_exit.clicked.connect(self.close)
         self.btn_open.clicked.connect(self.openImage)
 
     def info(self):
-        info = '作者：YHH\n完成时间：2020.6.17'
+        info = '作者：YHH\n完成时间：2020.7.1'
         QMessageBox.information(self, '关于', info, QMessageBox.Close)
 
     '''
