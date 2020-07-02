@@ -64,6 +64,7 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
             self, "´ò¿ªÕÕÆ¬", "", " *.jpg;;*.png;;*.jpeg;;*.bmp;;All Files (*)")
         if img_name:
             if len(img_name) == 1:
+                self.batch = False
                 self.image_path = img_name[0]
             else:
                 self.batch = True
@@ -452,6 +453,7 @@ class StartView(QtWidgets.QMainWindow, Ui_startView):
         if img_name:
             self.close()
             if len(img_name) == 1:
+                self.m_view.batch = False
                 self.m_view.image_path = img_name[0]
             else:
                 self.m_view.batch = True
