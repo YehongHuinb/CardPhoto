@@ -14,13 +14,13 @@ class Ui_startView(object):
         self.centralwidget = QtWidgets.QWidget(startView)
         self.centralwidget.setObjectName("centralwidget")
 
-        normalImg = QPixmap('./src/icon/exit.ico')
+        normalImg = QPixmap('./src/icon/exit.png')
         pressImg = normalImg.scaled(normalImg.width()*0.95, normalImg.height()*0.95)
         self.btn_exit = MyButton(self.centralwidget, normalImg, pressImg)
         self.btn_exit.setGeometry(QtCore.QRect(520, 180, 131, 131))
         self.btn_exit.setObjectName("btn_exit")
 
-        normalImg = QPixmap('./src/icon/open.ico')
+        normalImg = QPixmap('./src/icon/open.png')
         pressImg = normalImg.scaled(normalImg.width()*0.95, normalImg.height()*0.95)
         self.btn_open = MyButton(self.centralwidget, normalImg, pressImg)
         self.btn_open.setGeometry(QtCore.QRect(270, 180, 131, 131))
