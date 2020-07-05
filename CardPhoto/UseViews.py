@@ -4,7 +4,7 @@ import cv2
 import dlib
 import numpy as np
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtGui import QColor, QIcon
+from PyQt5.QtGui import QColor, QIcon, QPalette, QBrush
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QAction, QProgressBar
 from StartWindow import Ui_startView
 from MainWindow import Ui_mainView
@@ -17,6 +17,10 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
         super(MainView, self).__init__()
         self.setupUi(self)
         self.setWindowIcon(QIcon('./src/icon/picture.ico'))
+        palette = QPalette()
+        palette.setBrush(QPalette.Background,
+                         QBrush(QtGui.QPixmap("./src/BG.jpg")))
+        self.setPalette(palette)
         self.menuhelp.triggered[QAction].connect(self.info)
         self.btn_exit.clicked.connect(self.close)
         self.btn_save.clicked.connect(self.savePhoto)
@@ -427,7 +431,7 @@ class StartView(QtWidgets.QMainWindow, Ui_startView):
         super(StartView, self).__init__()
         self.setupUi(self)
         self.setWindowIcon(QIcon('./src/icon/picture.ico'))
-        palette = QtGui.QPalette()
+        palette = QPalette()
         palette.setColor(self.backgroundRole(), QColor(0, 167, 241))
         self.setPalette(palette)
         self.m_view = MainView()

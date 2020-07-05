@@ -1,7 +1,6 @@
 # -*- coding: gbk -*-
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QRect
 from PyQt5.QtGui import QPixmap
 from MyButton import MyButton
 
@@ -20,20 +19,20 @@ class Ui_mainView(object):
         self.gridLayout_2 = QtWidgets.QGridLayout(self.widget)
         self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self.gbox_bgcolor = QtWidgets.QGroupBox(self.widget)
-        self.gbox_bgcolor.setObjectName("gbox_bgcolor")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.gbox_bgcolor)
+        self.gb_bgcolor = QtWidgets.QGroupBox(self.widget)
+        self.gb_bgcolor.setObjectName("gb_bgcolor")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.gb_bgcolor)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.btn_rbg = QtWidgets.QRadioButton(self.gbox_bgcolor)
+        self.btn_rbg = QtWidgets.QRadioButton(self.gb_bgcolor)
         self.btn_rbg.setObjectName("btn_rbg")
         self.horizontalLayout.addWidget(self.btn_rbg)
-        self.btn_bbg = QtWidgets.QRadioButton(self.gbox_bgcolor)
+        self.btn_bbg = QtWidgets.QRadioButton(self.gb_bgcolor)
         self.btn_bbg.setObjectName("btn_bbg")
         self.horizontalLayout.addWidget(self.btn_bbg)
-        self.btn_wbg = QtWidgets.QRadioButton(self.gbox_bgcolor)
+        self.btn_wbg = QtWidgets.QRadioButton(self.gb_bgcolor)
         self.btn_wbg.setObjectName("btn_wbg")
         self.horizontalLayout.addWidget(self.btn_wbg)
-        self.gridLayout_2.addWidget(self.gbox_bgcolor, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.gb_bgcolor, 0, 0, 1, 1)
         self.gb_size = QtWidgets.QGroupBox(self.widget)
         self.gb_size.setObjectName("gb_size")
         self.gridLayout = QtWidgets.QGridLayout(self.gb_size)
@@ -120,14 +119,13 @@ class Ui_mainView(object):
         self.actionabout.setObjectName("actionabout")
         self.menuhelp.addAction(self.actionabout)
         self.menubar.addAction(self.menuhelp.menuAction())
-
         self.retranslateUi(mainView)
         QtCore.QMetaObject.connectSlotsByName(mainView)
 
     def retranslateUi(self, mainView):
         _translate = QtCore.QCoreApplication.translate
         mainView.setWindowTitle(_translate("mainView", "快证件照"))
-        self.gbox_bgcolor.setTitle(_translate("mainView", "底色"))
+        self.gb_bgcolor.setTitle(_translate("mainView", "底色"))
         self.btn_rbg.setText(_translate("mainView", "红色"))
         self.btn_bbg.setText(_translate("mainView", "蓝色"))
         self.btn_wbg.setText(_translate("mainView", "白色"))
