@@ -298,6 +298,21 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
             self.cutPreview()
 
     '''
+    @description:改颜色函数，适应批量处理功能
+    @param {type} :None
+    @return: void
+    '''
+    def changeColor(self):
+        if self.output_im is None:
+            return
+        if self.color_select == 0:
+            self.toRed()
+        elif self.color_select == 1 or self.color_select == -1:
+            self.toBlue()
+        elif self.color_select == 2:
+            self.toWhite()
+
+    '''
     @description:美化函数，对照片进行轻度美白
     @param {type} :None
     @return: void
@@ -312,12 +327,7 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
         if self.output_im is None:
             return
         self.output_im = np.power(self.output_im, white)
-        if self.color_select == 0:
-            self.toRed()
-        elif self.color_select == 1 or self.color_select == -1:
-            self.toBlue()
-        elif self.color_select == 2:
-            self.toWhite()
+        self.changeColor()
 
     '''
     @description:预览框变化函数，对应用户选择的尺寸
@@ -403,6 +413,8 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
     @return: void
     '''
     def preview(self):
+        self.beautify_select = False
+        self.btn_beauty.setChecked(False)
         if not self.batch:
             self.lab_sizeShow.show()
             self.image = cv2.imread(self.image_path)
@@ -410,6 +422,7 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
             self.getRect()
             self.getOutline()
             self.getDilate()
+            self.changeColor()
             if self.output_im is not None:
                 self.lab_preview.setPixmap(
                     QtGui.QPixmap('./temp/toShow.jpg').scaled(
