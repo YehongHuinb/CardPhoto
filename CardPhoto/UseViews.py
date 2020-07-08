@@ -52,7 +52,7 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
         self.dilate = None
 
     def info(self):
-        info = '作者：YHH\n完成时间：2020.7.1'
+        info = '作者：YHH\n完成时间：2020.7.8'
         QMessageBox.information(self, '关于', info, QMessageBox.Close)
 
     '''
@@ -71,7 +71,6 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
                 self.batch = True
                 self.image_paths = img_name[:]
             self.preview()
-            self.show()
         else:
             return
 
@@ -328,14 +327,15 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
     def cutPreview(self):
         if self.output_im is None:
             return
-        add_x = self.preview_change[self.size_select]
-        self.wid_hole.setGeometry(
-            QtCore.QRect(540 + add_x, 50, 361 - 2 * add_x, 381))
-        self.lab_preview.move(-add_x, 0)
-        width = self.size_width[self.size_select]
-        height = self.size_height[self.size_select]
-        size = str(width) + ' × ' + str(height)
-        self.lab_sizeShow.setText(size)
+        if self.size_select != -1:
+            add_x = self.preview_change[self.size_select]
+            self.wid_hole.setGeometry(
+                QtCore.QRect(540 + add_x, 50, 361 - 2 * add_x, 381))
+            self.lab_preview.move(-add_x, 0)
+            width = self.size_width[self.size_select]
+            height = self.size_height[self.size_select]
+            size = str(width) + ' × ' + str(height)
+            self.lab_sizeShow.setText(size)
 
     '''
     @description:保存照片函数
@@ -404,6 +404,7 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
     '''
     def preview(self):
         if not self.batch:
+            self.lab_sizeShow.show()
             self.image = cv2.imread(self.image_path)
             self.toFit()
             self.getRect()
@@ -413,6 +414,7 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
                 self.lab_preview.setPixmap(
                     QtGui.QPixmap('./temp/toShow.jpg').scaled(
                         self.lab_preview.width(), self.lab_preview.height()))
+            self.cutPreview()
         else:
             self.lab_sizeShow.hide()
             self.wid_hole.setGeometry(QtCore.QRect(540, 50, 361, 381))
@@ -420,10 +422,6 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
             self.lab_preview.setPixmap(
                 QtGui.QPixmap('./src/noShow.jpg').scaled(
                     self.lab_preview.width(), self.lab_preview.height()))
-
-
-class QtColor(object):
-    pass
 
 
 class StartView(QtWidgets.QMainWindow, Ui_startView):
@@ -440,7 +438,7 @@ class StartView(QtWidgets.QMainWindow, Ui_startView):
         self.btn_open.clicked.connect(self.openImage)
 
     def info(self):
-        info = '作者：YHH\n完成时间：2020.7.1'
+        info = '作者：YHH\n完成时间：2020.7.8'
         QMessageBox.information(self, '关于', info, QMessageBox.Close)
 
     '''

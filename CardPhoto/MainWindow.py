@@ -80,7 +80,7 @@ class Ui_mainView(object):
         pressImg = normalImg.scaled(normalImg.width()*0.95, normalImg.height()*0.95)
         self.btn_reload = MyButton(mainView, normalImg, pressImg)
         self.btn_reload.setObjectName("btn_reload")
-        self.btn_reload.move(670, 500)
+        self.btn_reload.move(660, 500)
 
         self.gridLayout_3.addWidget(self.btn_save, 0, 1, 1, 1)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
