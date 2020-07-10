@@ -37,6 +37,8 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
         self.btn_LtwoInch.clicked.connect(self.lTwoInch)
         self.btn_beauty.stateChanged.connect(self.beautify)
 
+        self.size_width = [295, 260, 390, 413, 413, 413]
+        self.size_height = [413, 378, 567, 579, 531, 626]
         self.preview_change = [44, 49, 49, 45, 33, 55]
         self.batch = False
         self.color_select = -1
