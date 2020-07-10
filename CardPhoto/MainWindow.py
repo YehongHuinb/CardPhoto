@@ -65,20 +65,17 @@ class Ui_mainView(object):
         self.gridLayout_3.setObjectName("gridLayout_3")
 
         normalImg = QPixmap('./src/icon/exit2.png')
-        pressImg = normalImg.scaled(normalImg.width()*0.95, normalImg.height()*0.95)
-        self.btn_exit = MyButton(self.widget_2, normalImg, pressImg)
+        self.btn_exit = MyButton(self.widget_2, normalImg)
         self.btn_exit.setObjectName("btn_exit")
 
         self.gridLayout_3.addWidget(self.btn_exit, 0, 3, 1, 1)
 
         normalImg = QPixmap('./src/icon/save.png')
-        pressImg = normalImg.scaled(normalImg.width()*0.95, normalImg.height()*0.95)
-        self.btn_save = MyButton(self.widget_2, normalImg, pressImg)
+        self.btn_save = MyButton(self.widget_2, normalImg)
         self.btn_save.setObjectName("btn_save")
 
         normalImg = QPixmap('./src/icon/reload.png')
-        pressImg = normalImg.scaled(normalImg.width()*0.95, normalImg.height()*0.95)
-        self.btn_reload = MyButton(mainView, normalImg, pressImg)
+        self.btn_reload = MyButton(mainView, normalImg)
         self.btn_reload.setObjectName("btn_reload")
         self.btn_reload.move(660, 500)
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: YHH
  * @Date: 2020-06-18 21:01:51
- * @LastEditTime: 2020-07-01 20:17:47
+ * @LastEditTime: 2020-07-10 22:06:06
  * @Description: In User Settings Edit
  * @FilePath: \CardPhoto\README.md
 --> 
@@ -14,9 +14,11 @@
 用于存放程序生成的中间文件(其实就一张照片)。
 ### 4. StartWindow.py、MainWindow.py
 用PyQt uic 转换得到的界面代码。
-### 5. MyButton.py
+### 5. UseViews.py
+调用上述两个界面代码的的界面类。
+### 6. Controller.py
+处理图片的控制类。
+### 7. MyButton.py
 自定义按钮类，重载了鼠标按压和释放事件。
-### 6. UseViews.py
-调用上述两个界面代码的的代码。
-### 7. main.py
+### 8. main.py
 程序运行脚本。

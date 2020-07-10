@@ -3,6 +3,7 @@
 import cv2
 import dlib
 import numpy as np
+import Controller
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtGui import QColor, QIcon, QPalette, QBrush
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QAction, QProgressBar
@@ -36,9 +37,6 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
         self.btn_LtwoInch.clicked.connect(self.lTwoInch)
         self.btn_beauty.stateChanged.connect(self.beautify)
 
-        self.detector = dlib.get_frontal_face_detector()
-        self.size_width = [295, 260, 390, 413, 413, 413]
-        self.size_height = [413, 378, 567, 579, 531, 626]
         self.preview_change = [44, 49, 49, 45, 33, 55]
         self.batch = False
         self.color_select = -1
@@ -52,7 +50,7 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
         self.dilate = None
 
     def info(self):
-        info = '作者：YHH\n完成时间：2020.7.8'
+        info = '作者：YHH\n完成时间：2020.7.10'
         QMessageBox.information(self, '关于', info, QMessageBox.Close)
 
     '''
@@ -94,30 +92,10 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
     @return: void
     '''
     def getRect(self):
-        t_img = self.image.copy()
-        faces = self.detector(t_img, 1)
-        t = t_img.shape
-        if len(faces) > 0:
-            for k, d in enumerate(faces):
-                # 假设肩膀的宽度与头部的宽度的比例大致为 3:1
-                left = max(int((3 * d.left() - d.right()) / 2), 1)
-                top = max(int((3 * d.top() - d.bottom()) / 2) - 50, 1)
-                right = min(int((3 * d.right() - d.left()) / 2), t[1])
-                bottom = min(int((3 * d.bottom() - d.top()) / 2), t[0])
-
-                # 使矩形的比例与预览框的大致相同
-                # 381 / 361 约为1.06
-                # 361 / 381 约为0.98
-                if bottom / right <= 0.9:
-                    x = int((right - bottom / 1.06) / 2)
-                    left = left + x
-                    right = right - x
-                elif bottom / right >= 1.1:
-                    y = int((bottom - right / 0.98) / 2)
-                    top = top + y
-                    bottom = bottom - y
-                self.rect = (left, top, right, bottom)
-        else:
+        if self.image is None:
+            return
+        self.rect = Controller.getRect(self.image)
+        if self.rect is None:
             QMessageBox.critical(self, "错误", "没有找到人脸！", QMessageBox.Close)
             return
 
@@ -129,24 +107,8 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
     def getOutline(self):
         if self.rect is None:
             return
-        t_img = self.image.copy()
-        t = t_img.shape
-        mask = np.zeros(t_img.shape[:2], np.uint8)
-        bgd_model = np.zeros((1, 65), np.float64)
-        fgd_model = np.zeros((1, 65), np.float64)
-        cv2.grabCut(t_img, mask, self.rect, bgd_model, fgd_model, 5,
-                    cv2.GC_INIT_WITH_RECT)
-        mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype('uint8')
-        t_img = t_img * mask2[:, :, np.newaxis]
-        kernels = np.ones((5, 5), np.uint8)
-        erode = cv2.erode(t_img, kernels, iterations=1)
-        dilate = cv2.dilate(erode, kernels, iterations=1)
-        for i in range(t[0]):
-            for j in range(t[1]):
-                if max(dilate[i, j]) <= 0:
-                    dilate[i, j] = (225, 166, 23)
-        dilate = dilate[self.rect[1]:self.rect[3], self.rect[0]:self.rect[2]]
-        self.output_im = cv2.resize(dilate,
+        self.output_im = Controller.getOutline(self.image, self.rect)
+        self.output_im = cv2.resize(self.output_im,
                                     (self.lab_preview.width(),
                                      self.lab_preview.height()))
         if not self.batch:
@@ -160,16 +122,7 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
     def getDilate(self):
         if self.output_im is None:
             return
-        t_img = self.output_im.copy()
-        hsv = cv2.cvtColor(t_img, cv2.COLOR_BGR2HSV)
-
-        # 背景蓝的HSV 值为[99, 229, 225]
-        lower_blue = np.array([90, 220, 215])
-        upper_blue = np.array([110, 240, 235])
-        mask = cv2.inRange(hsv, lower_blue, upper_blue)
-        kernels = np.ones((5, 5), np.uint8)
-        erode = cv2.erode(mask, kernels, iterations=1)
-        self.dilate = cv2.dilate(erode, kernels, iterations=1)
+        self.dilate = Controller.getDilate(self.output_im)
 
     '''
     @description:将背景改成红色 
@@ -180,15 +133,10 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
         self.color_select = 0
         if self.output_im is None:
             return
-        t_img = self.output_im.copy()
-        rows, cols, channels = t_img.shape
-        for i in range(rows):
-            for j in range(cols):
-                if self.dilate[i, j] == 255:
-                    t_img[i, j] = (0, 0, 255)
-        self.image = t_img.copy()
+        self.image = \
+            Controller.changeColor(self.output_im, self.dilate, self.color_select)
         if not self.batch:
-            cv2.imwrite('./temp/toShow.jpg', t_img)
+            cv2.imwrite('./temp/toShow.jpg', self.image)
             self.lab_preview.setPixmap(
                 QtGui.QPixmap('./temp/toShow.jpg').scaled(
                     self.lab_preview.width(), self.lab_preview.height()))
@@ -202,15 +150,10 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
         self.color_select = 1
         if self.output_im is None:
             return
-        t_img = self.output_im.copy()
-        rows, cols, channels = t_img.shape
-        for i in range(rows):
-            for j in range(cols):
-                if self.dilate[i, j] == 255:
-                    t_img[i, j] = (225, 166, 23)
-        self.image = t_img.copy()
+        self.image = \
+            Controller.changeColor(self.output_im, self.dilate, self.color_select)
         if not self.batch:
-            cv2.imwrite('./temp/toShow.jpg', t_img)
+            cv2.imwrite('./temp/toShow.jpg', self.image)
             self.lab_preview.setPixmap(
                 QtGui.QPixmap('./temp/toShow.jpg').scaled(
                     self.lab_preview.width(), self.lab_preview.height()))
@@ -224,15 +167,10 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
         self.color_select = 2
         if self.output_im is None:
             return
-        t_img = self.output_im.copy()
-        rows, cols, channels = t_img.shape
-        for i in range(rows):
-            for j in range(cols):
-                if self.dilate[i, j] == 255:
-                    t_img[i, j] = (255, 255, 255)
-        self.image = t_img.copy()
+        self.image = \
+            Controller.changeColor(self.output_im, self.dilate, self.color_select)
         if not self.batch:
-            cv2.imwrite('./temp/toShow.jpg', t_img)
+            cv2.imwrite('./temp/toShow.jpg', self.image)
             self.lab_preview.setPixmap(
                 QtGui.QPixmap('./temp/toShow.jpg').scaled(
                     self.lab_preview.width(), self.lab_preview.height()))
@@ -361,14 +299,8 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
             "*.jpg;;*.png;;*.jpeg;;*.bmp;;All Files (*)")
         if file_path == '':
             return
-        add_x = self.preview_change[self.size_select]
-        width = self.size_width[self.size_select]
-        height = self.size_height[self.size_select]
         if not self.batch:
-            t_img = self.image.copy()
-            t = t_img.shape
-            t_img = t_img[:, add_x:t[1] - add_x]
-            t_img = cv2.resize(t_img, (width, height))
+            t_img = Controller.changeSize(self.image, self.size_select)
             cv2.imwrite(file_path, t_img, None)
         else:
             file_path = file_path[:len(file_path)-4]
@@ -396,10 +328,7 @@ class MainView(QtWidgets.QMainWindow, Ui_mainView):
                 else:
                     self.toWhite()
 
-                t_img = self.image.copy()
-                t = t_img.shape
-                t_img = t_img[:, add_x:t[1] - add_x]
-                t_img = cv2.resize(t_img, (width, height))
+                t_img = Controller.changeSize(self.image, self.size_select)
                 f_path = file_path + str(i) + file_p
                 cv2.imwrite(f_path, t_img, None)
                 bar.setValue(step * i)
@@ -451,7 +380,7 @@ class StartView(QtWidgets.QMainWindow, Ui_startView):
         self.btn_open.clicked.connect(self.openImage)
 
     def info(self):
-        info = '作者：YHH\n完成时间：2020.7.8'
+        info = '作者：YHH\n完成时间：2020.7.10'
         QMessageBox.information(self, '关于', info, QMessageBox.Close)
 
     '''

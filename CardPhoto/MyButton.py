@@ -12,8 +12,11 @@ from PyQt5.QtWidgets import QPushButton
 
 
 class MyButton(QPushButton):
-    def __init__(self, parent, normalImg, pressImg):
+    def __init__(self, parent, normalImg, pressImg=None):
         super(MyButton, self).__init__(parent)
+        if pressImg is None:
+            pressImg = normalImg.scaled(normalImg.width() * 0.95,
+                                        normalImg.height() * 0.95)
         self.normalImg = normalImg
         self.pressImg = pressImg
         self.x = int(abs(self.normalImg.width() - self.pressImg.width()) / 2)
